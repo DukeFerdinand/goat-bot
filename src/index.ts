@@ -1,5 +1,5 @@
 import * as dotenv from 'dotenv'
-import Discord, { Client } from 'discord.js'
+import { Client } from 'discord.js'
 import { rateHandler } from './commands/rate'
 import { voteHandler } from './commands/vote'
 
@@ -20,9 +20,8 @@ const BotCommands = {
 
 client.on('message', (msg) => {
   try {
-    const test = ''
-    // He ignores himself
-    if (msg.member?.user.username === 'goat-bot') {
+    // goat-bot ignores himself and other bots
+    if (msg.member?.user.username === 'goat-bot' || msg.author.bot) {
       return
     }
     if (msg.content.match(BotCommands.Help)) {
@@ -49,4 +48,7 @@ if (!process.env.BOT_TOKEN) {
   throw new Error('Cannot run bot without bot token')
 }
 
+// Logging in
 client.login(process.env.BOT_TOKEN)
+
+export default client

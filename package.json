@@ -5,9 +5,11 @@
   "main": "dist/index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon -e ts,json -x \"yarn build-dev && yarn start\"",
-    "build-dev": "tsc -p .",
-    "start": "node dist/index.js"
+    "dev": "NODE_ENV=development nodemon -e ts,json -x \"yarn build:dev && yarn start\"",
+    "build:dev": "tsc -p .",
+    "start": "node dist/index.js",
+    "build": "NODE_ENV=production tsc -p .",
+    "prod": "yarn build && node dist/index.js"
   },
   "dependencies": {
     "discord.js": "^12.5.1",
