@@ -1,5 +1,5 @@
 import * as dotenv from 'dotenv'
-import { Client } from 'discord.js'
+import { Client, Message } from 'discord.js'
 import { rateHandler } from './commands/rate'
 import { voteHandler } from './commands/vote'
 
@@ -12,32 +12,39 @@ client.on('ready', () => {
   console.info(`Client ready, logged in as ${client.user?.tag}`)
 })
 
-const BotCommands = {
-  Help: /^!ghelp/,
-  Vote: /^!gvote/,
-  Rate: /^!grate/,
+export const BotCommands = {
+  Help: /^!help/,
+  Vote: /^!vote/,
+  Rate: /^!rate/,
+}
+
+const matchCommand = (msg: Message) => {
+  if (msg.content.match(BotCommands.Help)) {
+    voteHandler(msg)
+  }
+
+  // The main vote command
+  if (msg.content.match(BotCommands.Vote)) {
+    voteHandler(msg)
+  }
+
+  if (msg.content.match(BotCommands.Rate)) {
+    rateHandler(msg)
+  }
 }
 
 client.on('message', (msg) => {
   try {
     // goat-bot ignores himself and other bots
-    if (msg.member?.user.username === 'goat-bot' || msg.author.bot) {
+    if (
+      msg.member?.user.username === 'goat-bot' ||
+      msg.author.bot ||
+      !msg.content.startsWith('!')
+    ) {
       return
     }
-    if (msg.content.match(BotCommands.Help)) {
-      msg.reply(
-        'Help function is still marked TODO, blame my creator for being dumb',
-      )
-    }
 
-    // The main vote command
-    if (msg.content.match(BotCommands.Vote)) {
-      voteHandler(msg)
-    }
-
-    if (msg.content.match(BotCommands.Rate)) {
-      rateHandler(msg)
-    }
+    matchCommand(msg)
   } catch (e) {
     console.error(e)
     msg.reply('I am Error. Check the logs, buddy')

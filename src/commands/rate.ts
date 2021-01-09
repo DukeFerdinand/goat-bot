@@ -1,33 +1,40 @@
-import { Message } from 'discord.js'
+import { DMChannel, Message, NewsChannel, TextChannel } from 'discord.js'
 
 const Ratings = ['🇦', '🇧', '🇨']
 
-export const rateHandler = async (msg: Message) => {
-  const targetChannel = msg.guild?.channels.cache.find((channel) => {
-    return channel.name === 'ratings'
+const rateFormat = (content: string[]) => `
+${content
+  .map((item, i) => (i === 0 ? `**${item.trim()}**\n` : `${item.trim()}\n`))
+  .join('')}
+`
+
+export const rateHandler = async (msg: Message): Promise<void> => {
+  console.log('Running rate handler')
+  const handler: TextChannel | NewsChannel | DMChannel = msg.channel
+  const content = msg.content.split('!rate').join('').trim()
+
+  if (content.length === 0) {
+    msg.reply(
+      '!rate requires at least one argument: ```!rate <item-to-rate>```\n And for multi-line divide with "|": ```!rate item | optional line 2 content | optional line 3 content```',
+    )
+    return
+  }
+
+  const groups = content.split('|')
+
+  const message = await handler.send({
+    content: rateFormat(groups),
   })
 
-  const message = await msg.channel.send({
-    content: `**${'<placeholder>'}**`,
-  })
   try {
+    await msg.delete()
     Ratings.forEach(async (rating) => {
       await message.react(rating)
     })
   } catch (e) {
+    msg.reply(
+      'Something went wrong with your formatting, try again, or try !help',
+    )
     console.error(e)
   }
-  // message.react(':dogdance:')
-
-  // const commandContents = msg.content.split('!grate')[1].trim()
-  // const options = commandContents.split(', ')
-
-  // console.log(options)
-  // if (options.length === 0 || options[0] === '') {
-  //   msg.reply('No options provided, rating you instead. Rating: F')
-  // } else {
-  //   options.forEach((option, i) => {
-  //     msg.reply(`Rating on ${i + 1}: ${option}`)
-  //   })
-  // }
 }
