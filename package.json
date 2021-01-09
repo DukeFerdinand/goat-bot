@@ -1,0 +1,20 @@
+{
+  "name": "goat-vote",
+  "version": "0.1.0",
+  "description": "A simple vote bot for your discord server",
+  "main": "dist/index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon -e ts,json -x \"yarn build-dev && yarn start\"",
+    "build-dev": "tsc -p .",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "discord.js": "^12.5.1",
+    "dotenv": "^8.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^14.14.20",
+    "nodemon": "^2.0.7"
+  }
+}
