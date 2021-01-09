@@ -20,12 +20,15 @@ const BotCommands = {
 
 client.on('message', (msg) => {
   try {
+    const test = ''
     // He ignores himself
     if (msg.member?.user.username === 'goat-bot') {
       return
     }
     if (msg.content.match(BotCommands.Help)) {
-      msg.reply("Help function is still marked TODO, blame my creator for being dumb")
+      msg.reply(
+        'Help function is still marked TODO, blame my creator for being dumb',
+      )
     }
 
     // The main vote command
@@ -36,15 +39,14 @@ client.on('message', (msg) => {
     if (msg.content.match(BotCommands.Rate)) {
       rateHandler(msg)
     }
-
   } catch (e) {
     console.error(e)
-    msg.reply("I am Error. Check the logs, buddy")
+    msg.reply('I am Error. Check the logs, buddy')
   }
 })
 
 if (!process.env.BOT_TOKEN) {
-  throw new Error("Cannot run bot without bot token")
+  throw new Error('Cannot run bot without bot token')
 }
 
 client.login(process.env.BOT_TOKEN)
