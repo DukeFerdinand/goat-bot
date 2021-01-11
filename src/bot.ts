@@ -1,10 +1,6 @@
-import * as dotenv from 'dotenv'
 import { Client, Message } from 'discord.js'
 import { rateHandler } from './commands/rate'
 import { voteHandler } from './commands/vote'
-
-// Init env
-dotenv.config()
 
 const client = new Client()
 
@@ -51,11 +47,21 @@ client.on('message', (msg) => {
   }
 })
 
-if (!process.env.BOT_TOKEN) {
-  throw new Error('Cannot run bot without bot token')
-}
+client.on('ready', () => {
+  console.log('I am awake!')
+})
 
 // Logging in
-client.login(process.env.BOT_TOKEN)
+export const activateBot = async (): Promise<string> => {
+  if (!process.env.BOT_TOKEN) {
+    throw new Error('Cannot run bot without bot token')
+  }
+
+  return await client.login(process.env.BOT_TOKEN)
+}
+
+export const deactivateBot = (): void => {
+  client.destroy()
+}
 
 export default client
