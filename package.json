@@ -1,6 +1,6 @@
 {
   "name": "goat-vote",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A simple vote bot for your discord server",
   "main": "dist/index.js",
   "license": "MIT",
