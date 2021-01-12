@@ -1,5 +1,6 @@
 import { Client, Message } from 'discord.js'
 import { helpHandler } from './commands/help'
+import { infoHandler } from './commands/info'
 import { rateHandler } from './commands/rate'
 import { voteHandler } from './commands/vote'
 
@@ -13,15 +14,17 @@ export const BotCommands = {
   help: /^!help/,
   vote: /^!vote/,
   rate: /^!rate/,
+  info: /^\!info/,
 }
 
 export const BotCommandHandlers: Record<
   BotCommand,
-  (msg: Message) => void | Promise<void>
+  (msg: Message, ...args: unknown[]) => void | Promise<void>
 > = {
   vote: voteHandler,
   rate: rateHandler,
   help: helpHandler,
+  info: infoHandler,
 }
 
 type BotCommand = keyof typeof BotCommands

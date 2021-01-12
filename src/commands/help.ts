@@ -1,20 +1,24 @@
 import { Message } from 'discord.js'
 
 const helpMessage = `
-Goat Bot usage:
-
+Hi there! Here's how you can talk to me:
 \`\`\`
 Commands:
-  Help: Displays this message
-  !help
 
-  Ratings: Rate anything A, B, or C. Add more lines with | as a separator
-  !rate <thing to rate>
-  !rate <thing to rate> | <line 2> | <line 3> | ...
+Help:
+  !help - Displays this message
+
+Ratings:
+  !rate <thing to rate> - Rate anything A, B, or C
+  !rate <thing to rate> | <line 2> | <line 3> | ... - Add more lines with | as a separator
+
+Info:
+  !info - Get admin info and nerd stats
 
 \`\`\`
 `
 
-export const helpHandler = (msg: Message): void => {
-  msg.reply(helpMessage)
+export const helpHandler = async (msg: Message): Promise<void> => {
+  const dm = await msg.author.createDM()
+  dm.send(helpMessage)
 }
