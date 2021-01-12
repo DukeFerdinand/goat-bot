@@ -2,6 +2,7 @@ import { Client, Message } from 'discord.js'
 import { helpHandler } from './commands/help'
 import { infoHandler } from './commands/info'
 import { rateHandler } from './commands/rate'
+import { remindMeHandler } from './commands/remind-me'
 import { voteHandler } from './commands/vote'
 
 const client = new Client()
@@ -11,10 +12,11 @@ client.on('ready', () => {
 })
 
 export const BotCommands = {
-  help: /^!help/,
-  vote: /^!vote/,
-  rate: /^!rate/,
-  info: /^\!info/,
+  help: '!help',
+  vote: '!vote',
+  rate: '!rate',
+  info: '!info',
+  'remind-me': '!remind-me',
 }
 
 export const BotCommandHandlers: Record<
@@ -25,13 +27,14 @@ export const BotCommandHandlers: Record<
   rate: rateHandler,
   help: helpHandler,
   info: infoHandler,
+  'remind-me': remindMeHandler,
 }
 
 type BotCommand = keyof typeof BotCommands
 
 const matchCommand = (msg: Message): BotCommand | null => {
   for (const key of Object.keys(BotCommands) as [BotCommand]) {
-    if (msg.content.match(BotCommands[key])) {
+    if (msg.content.startsWith(BotCommands[key])) {
       return key
     }
   }
