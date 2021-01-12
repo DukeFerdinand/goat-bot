@@ -1,4 +1,5 @@
 import { Client, Message } from 'discord.js'
+import { helpHandler } from './commands/help'
 import { rateHandler } from './commands/rate'
 import { voteHandler } from './commands/vote'
 
@@ -9,24 +10,30 @@ client.on('ready', () => {
 })
 
 export const BotCommands = {
-  Help: /^!help/,
-  Vote: /^!vote/,
-  Rate: /^!rate/,
+  help: /^!help/,
+  vote: /^!vote/,
+  rate: /^!rate/,
 }
 
-const matchCommand = (msg: Message) => {
-  if (msg.content.match(BotCommands.Help)) {
-    voteHandler(msg)
+export const BotCommandHandlers: Record<
+  BotCommand,
+  (msg: Message) => void | Promise<void>
+> = {
+  vote: voteHandler,
+  rate: rateHandler,
+  help: helpHandler,
+}
+
+type BotCommand = keyof typeof BotCommands
+
+const matchCommand = (msg: Message): BotCommand | null => {
+  for (const key of Object.keys(BotCommands) as [BotCommand]) {
+    if (msg.content.match(BotCommands[key])) {
+      return key
+    }
   }
 
-  // The main vote command
-  if (msg.content.match(BotCommands.Vote)) {
-    voteHandler(msg)
-  }
-
-  if (msg.content.match(BotCommands.Rate)) {
-    rateHandler(msg)
-  }
+  return null
 }
 
 client.on('message', (msg) => {
@@ -40,13 +47,14 @@ client.on('message', (msg) => {
       return
     }
 
-    matchCommand(msg)
+    BotCommandHandlers[matchCommand(msg) || 'help'](msg)
   } catch (e) {
     console.error(e)
     msg.reply('I am Error. Check the logs, buddy')
   }
 })
 
+// Do any high level connection stuff here
 client.on('ready', () => {
   console.log('I am awake!')
 })
@@ -57,10 +65,12 @@ export const activateBot = async (): Promise<string> => {
     throw new Error('Cannot run bot without bot token')
   }
 
+  console.info('Activating bot')
   return await client.login(process.env.BOT_TOKEN)
 }
 
 export const deactivateBot = (): void => {
+  console.info('Deactivating bot')
   client.destroy()
 }
 
