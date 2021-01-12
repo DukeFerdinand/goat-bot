@@ -15,6 +15,11 @@ Ratings:
 Info:
   !info - Get admin info and nerd stats
 
+Reminders:
+  !remind-me <title> | <when to remind> - Remind you in a DM in the specified time.
+
+  Example formats: 1 day | 2 hours | 30 minutes | 1 day, 4 hours and 5 minutes
+
 \`\`\`
 `
 
