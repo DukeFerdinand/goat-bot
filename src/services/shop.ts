@@ -74,4 +74,17 @@ export class ShopConnection {
           }
     }
   }
+
+  public async getAllLists(): Promise<ShoppingList[]> {
+    const search = await this.db.collection('shopping-lists').get()
+
+    if (!search.empty) {
+      return search.docs.map((doc) => ({
+        ...(doc.data() as Omit<ShoppingList, 'id' | 'items'>),
+        id: doc.id,
+        items: [],
+      }))
+    }
+    return []
+  }
 }

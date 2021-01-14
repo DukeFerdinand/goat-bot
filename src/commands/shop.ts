@@ -15,6 +15,14 @@ const newHandler: Subcommand = async (p) => {
   sendToChannel(msg, JSON.stringify(result))
 }
 
+const formatDebug = (content: string) => {
+  return `
+  \`\`\`
+${content}
+  \`\`\`
+  `
+}
+
 /**
  * Show shopping lists
  */
@@ -22,11 +30,16 @@ const showShopHandler: Subcommand = async (p) => {
   const [msg, ...args] = p
   const name = args.join(' ').trim()
 
-  const result = await shopService.getList(name)
+  let result
+  if (name === '*') {
+    result = await shopService.getAllLists()
+  } else {
+    result = await shopService.getList(name)
+  }
 
   if (result) {
     console.log(result)
-    sendToChannel(msg, JSON.stringify(result))
+    sendToChannel(msg, formatDebug(JSON.stringify(result, undefined, 2)))
   } else {
     sendToChannel(msg, `List "${name}" not found`)
   }
