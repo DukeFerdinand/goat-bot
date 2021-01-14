@@ -3,6 +3,7 @@ import { helpHandler } from './commands/help'
 import { infoHandler } from './commands/info'
 import { rateHandler } from './commands/rate'
 import { remindMeHandler } from './commands/remind-me'
+import { shopHandler } from './commands/shop'
 import { voteHandler } from './commands/vote'
 
 export class GoatBot {
@@ -83,6 +84,7 @@ export const BotCommands = {
   rate: '!rate',
   info: '!info',
   'remind-me': '!remind-me',
+  shop: '!shop',
 }
 
 export const BotCommandHandlers: Record<
@@ -94,6 +96,7 @@ export const BotCommandHandlers: Record<
   help: helpHandler,
   info: infoHandler,
   'remind-me': remindMeHandler,
+  shop: shopHandler,
 }
 
 type BotCommand = keyof typeof BotCommands
