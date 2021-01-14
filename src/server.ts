@@ -8,22 +8,22 @@ app.use(express.json())
 // Use a singleton to simulate a global state
 const bot = new GoatBot()
 
-// app.use((req, res, next) => {
-//   const provided = req.headers.authorization,
-//     expected = process.env.NODE_AUTH_KEY
+app.use((req, res, next) => {
+  const provided = req.headers.authorization,
+    expected = process.env.NODE_AUTH_KEY
 
-//   if (!expected) {
-//     throw new Error('NODE_AUTH_KEY not found in env')
-//   }
+  if (!expected) {
+    throw new Error('NODE_AUTH_KEY not found in env')
+  }
 
-//   if (provided === expected) {
-//     next()
-//   } else {
-//     res.send(403).json({
-//       message: 'Please provide the expected API token',
-//     })
-//   }
-// })
+  if (provided === expected) {
+    next()
+  } else {
+    res.send(403).json({
+      message: 'Please provide the expected API token',
+    })
+  }
+})
 
 app.get('/health', (req, res) => {
   console.log('Health check')
