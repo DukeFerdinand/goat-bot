@@ -6,7 +6,7 @@ const app = express()
 app.use(express.json())
 
 // Use a singleton to simulate a global state
-const bot = new GoatBot()
+export const bot = new GoatBot()
 
 app.use((req, res, next) => {
   const provided = req.headers.authorization,

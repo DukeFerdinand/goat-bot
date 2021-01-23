@@ -5,6 +5,8 @@ import { rateHandler } from './commands/rate'
 import { remindMeHandler } from './commands/remind-me'
 import { shopHandler } from './commands/shop'
 import { voteHandler } from './commands/vote'
+import { smartDevHandler } from './commands/smartDevs'
+import { sendMessageHandler } from './commands/sendMessage'
 
 export class GoatBot {
   public client: Client | null = null
@@ -37,17 +39,21 @@ export class GoatBot {
   }
 
   public onMessage(msg: Message): void {
-    try {
-      // goat-bot ignores himself and other bots
-      if (
-        msg.member?.user.username === 'goat-bot' ||
-        msg.author.bot ||
-        !msg.content.startsWith('!')
-      ) {
-        return
-      }
+    const ignoredCases =
+      msg.member?.user.username === 'goat-bot' ||
+      msg.author.bot ||
+      !msg.content.startsWith('!')
+    // goat-bot ignores himself and other bots
+    if (ignoredCases) {
+      return
+    }
 
-      BotCommandHandlers[matchCommand(msg) || 'help'](msg)
+    try {
+      if (matchCommand(msg) === 'message') {
+        BotCommandHandlers.message(msg, [this])
+      } else {
+        BotCommandHandlers[matchCommand(msg) || 'help'](msg)
+      }
     } catch (e) {
       console.error(e)
       msg.reply('I am Error. Check the logs, buddy')
@@ -85,6 +91,8 @@ export const BotCommands = {
   info: '!info',
   'remind-me': '!remind-me',
   shop: '!shop',
+  lights: '!lights',
+  message: '!message',
 }
 
 export const BotCommandHandlers: Record<
@@ -97,6 +105,8 @@ export const BotCommandHandlers: Record<
   info: infoHandler,
   'remind-me': remindMeHandler,
   shop: shopHandler,
+  lights: smartDevHandler,
+  message: sendMessageHandler,
 }
 
 type BotCommand = keyof typeof BotCommands
