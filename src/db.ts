@@ -3,7 +3,6 @@ import { Firestore } from '@google-cloud/firestore'
 
 export const dbConnection = (): Firestore => {
   dotenv.config()
-  console.log(process.env.GCP_PROJECT_ID && process.env.GCP_PROJECT_KEYFILE)
   if (process.env.GCP_PROJECT_ID && process.env.GCP_PROJECT_KEYFILE) {
     return new Firestore({
       projectId: process.env.GCP_PROJECT_ID,
