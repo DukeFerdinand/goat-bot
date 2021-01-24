@@ -3,8 +3,9 @@ import { Message, MessageEmbed } from 'discord.js'
 
 import { EmbedColors } from '../utils/colors'
 import { bot } from '../server'
+import { getConfig } from '../utils/config'
 
-import projectConfig from '../../config.json'
+const projectConfig = getConfig()
 
 export const blankField = {
   name: '\u200b',

@@ -62,6 +62,7 @@
     "resolveJsonModule": true
   },
   "files": ["src/global.d.ts"],
+  "include": ["./src", "./config.json"],
   "types": ["node"],
   "exclude": ["node_modules"]
 }

@@ -1,10 +1,9 @@
 import { Message } from 'discord.js'
 import { bot } from '../server'
+import { getConfig } from '../utils/config'
 import { Embeds } from '../utils/embeds'
 
-import projectConfig from '../../config.json'
-
-const clearableChannels = projectConfig.clearableChannels
+const clearableChannels: Array<string> = getConfig().clearableChannels
 
 export const clearHandler = async (
   msg: Message,
