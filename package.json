@@ -16,10 +16,12 @@
     "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "marked": "^1.2.7",
     "pm2": "^4.5.1",
     "tplink-smarthome-api": "^3.1.0"
   },
   "devDependencies": {
+    "@types/marked": "^1.2.1",
     "@types/node": "^14.14.20",
     "@typescript-eslint/eslint-plugin": "^4.11.1",
     "@typescript-eslint/parser": "^4.11.1",

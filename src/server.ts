@@ -1,5 +1,7 @@
 import * as dotenv from 'dotenv'
 import express from 'express'
+import marked from 'marked'
+
 import { ClientAsJSON, GoatBot } from './bot'
 
 const app = express()
@@ -8,28 +10,95 @@ app.use(express.json())
 // Use a singleton to simulate a global state
 export const bot = new GoatBot()
 
+const publicRoutes = [/\/(help|health)\/?.*/]
+
+const routeMatcher = (route: string, routeMatches: Array<RegExp>): boolean => {
+  for (const regex of routeMatches) {
+    return route.match(regex) !== null
+  }
+  return false
+}
+
 app.use((req, res, next) => {
   const provided = req.headers.authorization,
-    expected = process.env.NODE_AUTH_KEY
+    expected = process.env.NODE_AUTH_KEY,
+    route = req.path
 
   if (!expected) {
     throw new Error('NODE_AUTH_KEY not found in env')
   }
 
-  if (provided === expected) {
+  if (provided === expected || routeMatcher(route, publicRoutes)) {
     next()
   } else {
-    res.send(403).json({
+    res.status(403).json({
       message: 'Please provide the expected API token',
     })
   }
+})
+
+const withBaseHTML = (content: string) => `
+<html>
+  <head>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+      * {
+        font-family: 'Open Sans';
+        box-sizing: border-box;
+      }
+      body, html {
+        padding: 0;
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div style="
+        display: flex;
+        justify-content: center;
+        width: 100vw;
+        height: 100vh;
+        flex-direction: column;
+      "
+    >
+      <div
+        style="
+          padding: 15px;
+          width: 50%;
+          height: 100%;
+          box-shadow: 0 0 5px 0 gray;
+          margin: 0 auto;
+        "
+      >
+        ${content}
+      </div>
+    </div>
+  </body>
+</html>
+`
+
+const renderMarkdown = (content: string) => withBaseHTML(marked(content))
+
+app.get('/help', (req, res) => {
+  res.status(200).type('html').send(
+    renderMarkdown(
+      `
+# How to use goat bot
+- test
+- test
+- test
+`,
+    ),
+  )
 })
 
 app.get('/health', (req, res) => {
   console.log('Health check')
 
   res.status(200).json({
-    client: bot.client?.toJSON(),
+    message: 'Goat Bot server is okay',
+    clientRunning: !!bot.client,
   })
 })
 

@@ -1,19 +1,50 @@
-import { Message } from 'discord.js'
+import { uptime } from 'process'
+import { Message, MessageEmbed } from 'discord.js'
 
-const infoFormat = `
-Here's that info you asked for:
+import { EmbedColors } from '../utils/colors'
+import { bot } from '../server'
+
+import projectConfig from '../../config.json'
+
+export const blankField = {
+  name: '\u200b',
+  value: '\u200b',
+}
+
+const projectJSON = `
 \`\`\`
-Filler info here
-
-This is to be used for things like total active reminders, uptime, health check...
-
-Basically a mini dashboard
+${JSON.stringify(projectConfig, null, 2)}
 \`\`\`
-
 `
 
 export const infoHandler = (msg: Message): void => {
+  const embed = new MessageEmbed()
+    .setColor(EmbedColors.Info)
+    .setTitle('Goat Bot Info')
+    .setThumbnail(bot.client?.user?.displayAvatarURL() || '')
+    .setDescription('Nerd Stats for Goat Bot')
+    .addFields([
+      {
+        name: 'Server Uptime',
+        value: Math.floor(uptime()),
+      },
+      {
+        inline: true,
+        name: 'Express Hostname',
+        value: `\`${JSON.stringify(process.env.NODE_ENV)}\``,
+      },
+      {
+        inline: true,
+        name: 'Environment',
+        value: `\`${JSON.stringify(process.env.NODE_ENV)}\``,
+      },
+      {
+        name: 'Project Config',
+        value: projectJSON,
+      },
+    ])
+    .setTimestamp()
   if (msg.channel.isText()) {
-    msg.channel.send(infoFormat)
+    msg.channel.send(embed)
   }
 }

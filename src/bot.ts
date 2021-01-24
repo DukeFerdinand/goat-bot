@@ -7,6 +7,8 @@ import { shopHandler } from './commands/shop'
 import { voteHandler } from './commands/vote'
 import { smartDevHandler } from './commands/smartDevs'
 import { sendMessageHandler } from './commands/sendMessage'
+import { emojiHandler } from './commands/emoji'
+import { clearHandler } from './commands/clear'
 
 export class GoatBot {
   public client: Client | null = null
@@ -93,6 +95,8 @@ export const BotCommands = {
   shop: '!shop',
   lights: '!lights',
   message: '!message',
+  emote: '!emote',
+  clear: '!clear',
 }
 
 export const BotCommandHandlers: Record<
@@ -107,6 +111,8 @@ export const BotCommandHandlers: Record<
   shop: shopHandler,
   lights: smartDevHandler,
   message: sendMessageHandler,
+  emote: emojiHandler,
+  clear: clearHandler,
 }
 
 type BotCommand = keyof typeof BotCommands
