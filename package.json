@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "NODE_ENV=development nodemon -e ts,json -x \"ts-node src/server.ts\"",
-    "start": "node --version",
+    "start": "pm2-runtime dist/server.js",
     "build": "NODE_ENV=production tsc -p ."
   },
   "dependencies": {
