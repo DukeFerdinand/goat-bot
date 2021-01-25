@@ -62,16 +62,23 @@ export class GoatBot {
     }
   }
 
-  public async onReady(): Promise<void> {
-    console.info(`Client ready, logged in as ${this.client?.user?.tag}`)
-    console.log('[Goat Bot] I am awake!', process.env.NODE_ENV)
+  public onReady(): void {
+    console.info(`Client is ready for commands`)
+  }
+
+  public async setStatus(): Promise<void> {
     if (process.env.NODE_ENV === 'development') {
-      await this.client?.user?.setStatus('dnd')
-      await this.client?.user?.setActivity({
-        name: 'Update my code',
+      const status = await this.client?.user?.setStatus('idle')
+      const res = await this.client?.user?.setActivity('Visual Studio Code', {
         type: 'PLAYING',
       })
-      console.log('Done setting status')
+      console.log('Done setting status', status, res)
+    } else {
+      const status = await this.client?.user?.setStatus('online')
+      const res = await this.client?.user?.setActivity('Goat Simulator', {
+        type: 'PLAYING',
+      })
+      console.log('Done setting status', status, res)
     }
   }
 
@@ -79,6 +86,8 @@ export class GoatBot {
     this.init()
     this.setup()
     await this.login()
+    await this.setStatus()
+    console.log('[Goat Bot] I am awake!')
   }
 
   public deactivate(): void {
