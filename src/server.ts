@@ -10,7 +10,7 @@ app.use(express.json())
 // Use a singleton to simulate a global state
 export const bot = new GoatBot()
 
-const publicRoutes = [/\/(help|health)\/?.*/]
+const publicRoutes = [/\/(help|health|progress)\/?.*/]
 
 const routeMatcher = (route: string, routeMatches: Array<RegExp>): boolean => {
   for (const regex of routeMatches) {
@@ -72,6 +72,60 @@ const withBaseHTML = (content: string) => `
         "
       >
         ${content}
+      </div>
+    </div>
+  </body>
+</html>
+`
+
+const progressBarHTML = (percentage = 0) => `
+<html>
+  <head>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+        background: rgba(0,0,0,0);
+        box-sizing: border-box;
+      }
+      html, body {
+        width: 400px;
+        height: 30px;
+      }
+      .progress-bar {
+        position: relative;
+        width: 400px;
+        background: #222;
+        height: 30px;
+        border-radius: 5px;
+        overflow: hidden;
+      }
+      .progress-indicator {
+        height: 100%;
+        width: ${percentage}%;
+        background: #FFAA63;
+      }
+      .text-content {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding-right: 25px;
+        font-size: 15px;
+        color: #FEFEFE;
+        font-family: sans-serif;
+      }
+    </style>
+    <title>Progress Bar</title>
+  </head>
+  <body>
+    <div class="progress-bar">
+      <div class="progress-indicator"></div>
+      <div class="text-content">
+        <span>500/1000 EXP</span>
       </div>
     </div>
   </body>
@@ -155,6 +209,10 @@ app.post('/restart', async (req, res) => {
     status,
     client: bot.client?.toJSON(),
   })
+})
+
+app.get('/progress', (req, res) => {
+  res.status(200).contentType('html').send(progressBarHTML(50))
 })
 
 app.listen(8000, '0.0.0.0', async () => {
