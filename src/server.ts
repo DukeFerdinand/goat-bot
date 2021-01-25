@@ -78,7 +78,7 @@ const withBaseHTML = (content: string) => `
 </html>
 `
 
-const progressBarHTML = (percentage = 0) => `
+const progressBarHTML = (percentage = 0, message: string) => `
 <html>
   <head>
     <style>
@@ -125,7 +125,7 @@ const progressBarHTML = (percentage = 0) => `
     <div class="progress-bar">
       <div class="progress-indicator"></div>
       <div class="text-content">
-        <span>500/1000 EXP</span>
+        <span>${message}</span>
       </div>
     </div>
   </body>
@@ -212,7 +212,7 @@ app.post('/restart', async (req, res) => {
 })
 
 app.get('/progress', (req, res) => {
-  res.status(200).contentType('html').send(progressBarHTML(50))
+  res.status(200).contentType('html').send(progressBarHTML(50, '5/10'))
 })
 
 app.listen(8000, '0.0.0.0', async () => {
