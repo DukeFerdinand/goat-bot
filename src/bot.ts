@@ -62,9 +62,17 @@ export class GoatBot {
     }
   }
 
-  public onReady(): void {
+  public async onReady(): Promise<void> {
     console.info(`Client ready, logged in as ${this.client?.user?.tag}`)
-    console.log('[Goat Bot] I am awake!')
+    console.log('[Goat Bot] I am awake!', process.env.NODE_ENV)
+    if (process.env.NODE_ENV === 'development') {
+      await this.client?.user?.setStatus('dnd')
+      await this.client?.user?.setActivity({
+        name: 'Update my code',
+        type: 'PLAYING',
+      })
+      console.log('Done setting status')
+    }
   }
 
   public async activate(): Promise<void> {
